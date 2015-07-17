@@ -23,7 +23,7 @@ using namespace glm;
 #define max(a, b) ((a)>(b)?(a):(b))
 
 const int fps = 60;
-const int cube_height = 4;
+const int cube_height = 2;
 const int waveform_interval = 5;
 const float waveform_length = 20.0;
 
@@ -547,7 +547,7 @@ int main(int argc, char **argv)
 		printf("%lf %lf %lf %lf\n", accurate_time, current_time, current_time - last_time, delta);
 		delta = delta > 0 ? delta : 0;
 		last_time = current_time;
-		//if(current_time > 0.1) usleep(delta * 1000000);
+		if(current_time > 0.1) usleep(delta * 1000000);
 		//printf("%d\n", data.size);
 		glfwPollEvents();
 	} // Check if the ESC key was pressed or the window was closed
