@@ -23,7 +23,7 @@ using namespace glm;
 #define max(a, b) ((a)>(b)?(a):(b))
 
 const int fps = 60;
-const int cube_height = 4;
+const int cube_height = 2;
 
 int main(int argc, char **argv)
 {
@@ -461,13 +461,13 @@ int main(int argc, char **argv)
 		// in the "MVP" uniform
 		double sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-			//sum_l = max(sum_l, abs(((short*)data.data)[data_index++]));
-			//sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
-			sum_l += abs(((short*)data.data)[data_index++]);
-			sum_r += abs(((short*)data.data)[data_index++]);
+			sum_l = max(sum_l, abs(((short*)data.data)[data_index++]));
+			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
+			//sum_l += abs(((short*)data.data)[data_index++]);
+			//sum_r += abs(((short*)data.data)[data_index++]);
 		}
-		Model[1][1] = sum_l / bpf / 32768 * cube_height;
-		//Model[1][1] = sum_l / 32768 * cube_height;
+		//Model[1][1] = sum_l / bpf / 32768 * cube_height;
+		Model[1][1] = sum_l / 32768 * cube_height;
 		MVP = PV * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
@@ -498,8 +498,8 @@ int main(int argc, char **argv)
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles
 
-		Model[1][1] = sum_r / bpf / 32768 * cube_height;
-		//Model[1][1] = sum_r / 32768 * cube_height;
+		//Model[1][1] = sum_r / bpf / 32768 * cube_height;
+		Model[1][1] = sum_r / 32768 * cube_height;
 		MVP = PV * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
