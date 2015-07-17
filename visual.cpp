@@ -26,7 +26,7 @@ using namespace glm;
 const int fps = 60;
 const int cube_height = 2;
 const int waveform_interval = 1;
-const float waveform_length = 2.0;
+const float waveform_length = 10.0;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 04 - Colored Cube", NULL, NULL);
+	window = glfwCreateWindow( 1920, 1080, "Audio Visualization", glfwGetPrimaryMonitor(), NULL);
 	if(window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
@@ -104,81 +104,81 @@ int main(int argc, char **argv)
 	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
 	// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
 	static const GLfloat g_vertex_buffer_data1[] = { 
-		-1.0f-1.5f,-1.0f+1.0f,-1.0f, //left
-		-1.0f-1.5f,-1.0f+1.0f, 1.0f,
-		-1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f-1.5f,-1.0f+1.0f,-1.0f,
-		-1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f-1.5f,-1.0f+1.0f,-1.0f, //right
-		 1.0f-1.5f,-1.0f+1.0f, 1.0f,
-		 1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f-1.5f,-1.0f+1.0f,-1.0f,
-		 1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		 1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f-1.5f,-1.0f+1.0f, 1.0f, //front
-		 1.0f-1.5f,-1.0f+1.0f, 1.0f,
-		 1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f-1.5f,-1.0f+1.0f, 1.0f,
-		-1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f-1.5f, 1.0f+1.0f,-1.0f, //top
-		 1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		 1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f-1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f-1.5f,-1.0f+1.0f,-1.0f, //back
-		 1.0f-1.5f,-1.0f+1.0f,-1.0f,
-		 1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f-1.5f,-1.0f+1.0f,-1.0f,
-		-1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		 1.0f-1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f-1.5f,-1.0f+1.0f,-1.0f, //bottom
-		 1.0f-1.5f,-1.0f+1.0f,-1.0f,
-		 1.0f-1.5f,-1.0f+1.0f, 1.0f,
-		-1.0f-1.5f,-1.0f+1.0f,-1.0f,
-		-1.0f-1.5f,-1.0f+1.0f, 1.0f,
-		 1.0f-1.5f,-1.0f+1.0f, 1.0f
+		-1.0f,-1.0f,-1.0f, //left
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f,-1.0f, //right
+		 1.0f,-1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f, //front
+		 1.0f,-1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f, //top
+		 1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f, //back
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f, //bottom
+		 1.0f,-1.0f,-1.0f,
+		 1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f, 1.0f,
+		 1.0f,-1.0f, 1.0f
 	};
 
 	static const GLfloat g_vertex_buffer_data2[] = { 
-		-1.0f+1.5f,-1.0f+1.0f,-1.0f, //left
-		-1.0f+1.5f,-1.0f+1.0f, 1.0f,
-		-1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f+1.5f,-1.0f+1.0f,-1.0f,
-		-1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f+1.5f,-1.0f+1.0f,-1.0f, //right
-		 1.0f+1.5f,-1.0f+1.0f, 1.0f,
-		 1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f+1.5f,-1.0f+1.0f,-1.0f,
-		 1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		 1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f+1.5f,-1.0f+1.0f, 1.0f, //front
-		 1.0f+1.5f,-1.0f+1.0f, 1.0f,
-		 1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f+1.5f,-1.0f+1.0f, 1.0f,
-		-1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f+1.5f, 1.0f+1.0f,-1.0f, //top
-		 1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		 1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		 1.0f+1.5f, 1.0f+1.0f, 1.0f,
-		-1.0f+1.5f,-1.0f+1.0f,-1.0f, //back
-		 1.0f+1.5f,-1.0f+1.0f,-1.0f,
-		 1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f+1.5f,-1.0f+1.0f,-1.0f,
-		-1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		 1.0f+1.5f, 1.0f+1.0f,-1.0f,
-		-1.0f+1.5f,-1.0f+1.0f,-1.0f, //bottom
-		 1.0f+1.5f,-1.0f+1.0f,-1.0f,
-		 1.0f+1.5f,-1.0f+1.0f, 1.0f,
-		-1.0f+1.5f,-1.0f+1.0f,-1.0f,
-		-1.0f+1.5f,-1.0f+1.0f, 1.0f,
-		 1.0f+1.5f,-1.0f+1.0f, 1.0f
+		-1.0f,-1.0f,-1.0f, //left
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f,-1.0f, //right
+		 1.0f,-1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f, //front
+		 1.0f,-1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f, //top
+		 1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		 1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f, //back
+		 1.0f,-1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		 1.0f, 1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f, //bottom
+		 1.0f,-1.0f,-1.0f,
+		 1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f, 1.0f,
+		 1.0f,-1.0f, 1.0f
 	};
 
 	// One color for each vertex. They were generated randomly.
@@ -371,15 +371,25 @@ int main(int argc, char **argv)
 		// in the "MVP" uniform
 		double sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-			sum_l = max(sum_l, abs(((short*)data.data)[data_index++]));
+			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //sum
 			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
-			//sum_l += abs(((short*)data.data)[data_index++]);
+			//sum_l += abs(((short*)data.data)[data_index++]); //avg
 			//sum_r += abs(((short*)data.data)[data_index++]);
 		}
+		//sum_l /= bpf; //avg
+		//sum_r /= bpf;
 
-		//Model[1][1] = sum_l / bpf / 32768 * cube_height;
-		Model[1][1] = sum_l / 32768 * cube_height;
-		MVP = PV * Model;
+		Model = glm::mat4(
+			 1.0, 0.0, 0.0, 0.0,
+			 0.0, 1.0, 0.0, 0.0,
+			 0.0, 0.0, 1.0, 0.0,
+			-2.0, 1.0, 0.0, 1.0);
+		glm::mat4 scale1 = glm::mat4(
+			1.0, 0.0, 0.0, 0.0,
+			0.0, sum_l / 32768 * cube_height, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			0.0, 0.0, 0.0, 1.0);
+		MVP = PV * scale1 * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		// 1rst attribute buffer : vertices
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1);
@@ -404,9 +414,17 @@ int main(int argc, char **argv)
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles
 
-		//Model[1][1] = sum_r / bpf / 32768 * cube_height;
-		Model[1][1] = sum_r / 32768 * cube_height;
-		MVP = PV * Model;
+		Model = glm::mat4(
+			 1.0, 0.0, 0.0, 0.0,
+			 0.0, 1.0, 0.0, 0.0,
+			 0.0, 0.0, 1.0, 0.0,
+			 2.0, 1.0, 0.0, 1.0);
+		glm::mat4 scale2 = glm::mat4(
+			1.0, 0.0, 0.0, 0.0,
+			0.0, sum_r / 32768 * cube_height, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			0.0, 0.0, 0.0, 1.0);
+		MVP = PV * scale2 * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		// 1rst attribute buffer : vertices
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
@@ -451,6 +469,7 @@ int main(int argc, char **argv)
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
+	pthread_cancel(a_thread);
 	res = pthread_join(a_thread, &thread_result);
 	if(res != 0) {
 		perror("Thread join failed!");
