@@ -3,7 +3,7 @@
 #include <string.h>
 #include "play_wav.hpp"
 
-int	set_pcm_play(char *file)
+int	play_wav(char *file)
 {
 	struct WAV_HEADER wav_header;
 	int nread;
