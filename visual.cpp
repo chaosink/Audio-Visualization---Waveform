@@ -542,7 +542,8 @@ int main(int argc, char **argv)
 		printf("%lf %lf %lf %lf\n", accurate_time, current_time, current_time - last_time, delta);
 		delta = delta > 0 ? delta : 0;
 		last_time = current_time;
-		if(current_time > 0.1) usleep(delta * 1000000);
+		//if(current_time > 0.1) usleep(delta * 1000000);
+		usleep(delta * 1000000);
 		//printf("%d\n", data.size);
 		glfwPollEvents();
 	} // Check if the ESC key was pressed or the window was closed
