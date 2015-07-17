@@ -25,8 +25,8 @@ using namespace glm;
 
 const int fps = 60;
 const int cube_height = 2;
-const int waveform_interval = 5;
-const float waveform_length = 10.0;
+const int waveform_interval = 1;
+const float waveform_length = 2.0;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -333,7 +333,8 @@ int main(int argc, char **argv)
 			1,                  // size
 			GL_FLOAT,           // type
 			GL_FALSE,           // normalized?
-			0,                  // stride
+			waveform_interval * 4,
+								// stride
 			(void*)0            // array buffer offset
 		);
 
@@ -344,10 +345,11 @@ int main(int argc, char **argv)
 			1,                  // size
 			GL_SHORT,           // type
 			GL_FALSE,           // normalized?
-			3,                  // stride
+			waveform_interval * 2,
+								// stride
 			(void*)0            // array buffer offset
 		);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf); // 12*3 indices starting at 0 -> 12 triangles
+		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); // 12*3 indices starting at 0 -> 12 triangles
 
 		glUniform1i(objectID, 2);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
@@ -357,10 +359,11 @@ int main(int argc, char **argv)
 			1,                  // size
 			GL_SHORT,           // type
 			GL_FALSE,           // normalized?
-			3,                  // stride
+			waveform_interval * 2,
+								// stride
 			(void*)2            // array buffer offset
 		);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf); // 12*3 indices starting at 0 -> 12 triangles
+		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); // 12*3 indices starting at 0 -> 12 triangles
 
 
 		glUniform1i(objectID, 0);
