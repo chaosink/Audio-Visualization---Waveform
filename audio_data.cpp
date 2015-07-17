@@ -29,5 +29,6 @@ struct audio_data get_audio_data(char *file) {
     data.data = malloc(data.size);
     fseek(fp, 44, SEEK_SET);
     nread = fread(data.data, data.size, 1, fp);
+    fclose(fp);
     return data;
 }

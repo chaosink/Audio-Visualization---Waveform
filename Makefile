@@ -7,4 +7,4 @@ target = visual
 all: $(target)
 
 $(target): $(target).cpp
-	clang++ -I/usr/local/include/GLFW/ -I.. $(target).cpp -o $(target) $(common) $(lib) $(GLFW) $(GLEW)
+	clang++ -I/usr/local/include/GLFW/ -I.. $(target).cpp -o $(target) $(common) $(lib) -lasound $(GLFW) $(GLEW)
