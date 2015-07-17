@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
-	GLuint programID = LoadShaders( "TransformVertexShader.vert", "ColorFragmentShader.frag" );
+	GLuint programID = LoadShaders( "VertexShader.vert", "FragmentShader.frag" );
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
