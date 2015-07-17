@@ -1,30 +1,25 @@
 #version 330 core
 
-// Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 vertexPosition_modelspace;
 layout(location = 1) in vec3 vertexColor;
-layout(location = 2) in float x;
+layout(location = 2) in float z;
 
-// Output data ; will be interpolated for each fragment.
 out vec3 fragmentColor;
-// Values that stay constant for the whole mesh.
+
 uniform mat4 MVP;
 uniform int object;
 
-void main(){	
-
-	// Output position of the vertex, in clip space : MVP * position
-	if(object == 0)
+void main() {
+	if(object != 1 && object != 2)
 		gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
 	else if(object == 1)
-		gl_Position = MVP * vec4(-5.0, vertexPosition_modelspace.x / 32768 * 4, x * 8, 1);
-	else
-		gl_Position = MVP * vec4( 5.0, vertexPosition_modelspace.x / 32768 * 4, x * 8, 1);
+		gl_Position = MVP * vec4(-5.0, vertexPosition_modelspace.x / 32768 * 8, z, 1);
+	else if(object == 2)
+		gl_Position = MVP * vec4( 5.0, vertexPosition_modelspace.x / 32768 * 8, z, 1);
 
-	// The color of each vertex will be interpolated
-	// to produce the color of each fragment
 	if(object == 0) fragmentColor = vertexColor;
-	else if(object == 1) fragmentColor = vec3(1.0, 0.0, 0.0);
-	else fragmentColor = vec3(0.0, 0.0, 1.0);
+	else if(object == 1) fragmentColor = vec3(1.0, 0.5, 0.5);
+	else if(object == 2) fragmentColor = vec3(0.5, 0.5, 1.0);
+	else if(object == 3) fragmentColor = vec3(1.0, 0.8, 0.8);
+	else if(object == 4) fragmentColor = vec3(0.8, 0.8, 1.0);
 }
-
