@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "TransformVertexShader.vertexshader", "ColorFragmentShader.fragmentshader" );
+	GLuint programID = LoadShaders( "TransformVertexShader.vert", "ColorFragmentShader.frag" );
 
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
