@@ -23,7 +23,9 @@ using namespace glm;
 #define max(a, b) ((a)>(b)?(a):(b))
 
 const int fps = 60;
-const int cube_height = 2;
+const int cube_height = 4;
+const int waveform_interval = 5;
+const float waveform_length = 20.0;
 
 int main(int argc, char **argv)
 {
@@ -78,6 +80,7 @@ int main(int argc, char **argv)
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
+	GLuint xID = glGetUniformLocation(programID, "x");
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
@@ -395,6 +398,7 @@ int main(int argc, char **argv)
 			}
 		}
 
+
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -411,25 +415,26 @@ int main(int argc, char **argv)
 //		MVP = PV;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 1);
+		glUniform1f(xID, data_index % 735 / 735.0 * 2 - 1);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
-		glBufferData(GL_ARRAY_BUFFER, bpf * 2, (char *)data.data + data_index, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, bpf * 4, (short *)data.data + data_index, GL_STATIC_DRAW);
 		glVertexAttribPointer(
 			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 			1,                  // size
 			GL_SHORT,           // type
 			GL_FALSE,           // normalized?
-			1,                  // stride
+			3,                  // stride
 			(void*)0            // array buffer offset
 		);
 
-		float x[bpf];
-		for(int i = 0; i < bpf; i++) x[i] = 10.0 / bpf * i - 5;
+		float z[bpf];
+		for(int i = 0; i < bpf; i++) z[i] = waveform_length / bpf * i - waveform_length / 2;
 
 		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
-		glBufferData(GL_ARRAY_BUFFER, bpf * 4, x, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, bpf * 4, z, GL_STATIC_DRAW);
 		glVertexAttribPointer(
 			2,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 			1,                  // size
@@ -450,8 +455,8 @@ int main(int argc, char **argv)
 			1,                  // size
 			GL_SHORT,           // type
 			GL_FALSE,           // normalized?
-			1,                  // stride
-			(void*)2            // array buffer offset
+			3,                  // stride
+			(void*)1            // array buffer offset
 		);
 
 		glDrawArrays(GL_LINE_STRIP, 0, bpf); // 12*3 indices starting at 0 -> 12 triangles
@@ -542,7 +547,7 @@ int main(int argc, char **argv)
 		printf("%lf %lf %lf %lf\n", accurate_time, current_time, current_time - last_time, delta);
 		delta = delta > 0 ? delta : 0;
 		last_time = current_time;
-		if(current_time > 0.1) usleep(delta * 1000000);
+		//if(current_time > 0.1) usleep(delta * 1000000);
 		//printf("%d\n", data.size);
 		glfwPollEvents();
 	} // Check if the ESC key was pressed or the window was closed
