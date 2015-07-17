@@ -18,11 +18,12 @@ using namespace glm;
 #include <common/shader.hpp>
 #include <common/controls.hpp>
 #include "audio_data.hpp"
+#include "play_wav.hpp"
 
 #define max(a, b) ((a)>(b)?(a):(b))
 
 const int fps = 60;
-const int cube_height = 4;
+const int cube_height = 2;
 
 int main(int argc, char **argv)
 {
@@ -78,7 +79,7 @@ int main(int argc, char **argv)
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
 
-	// Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	// Camera matrix
 	glm::mat4 View       = glm::lookAt(
@@ -283,8 +284,117 @@ int main(int argc, char **argv)
 	double current_time;
 	double last_time;
 
+	struct WAV_HEADER wav_header;
+	int nread;
+	FILE *fp;
+	fp = fopen(argv[1], "rb");
+	if(fp == NULL) {
+		perror("open file failed:\n");
+		exit(1);
+	}
+	nread = fread(&wav_header, 1, sizeof(wav_header), fp);
+
+	int rc;
+	int ret;
+	int size;
+	snd_pcm_t* handle; //PCI设备句柄
+	snd_pcm_hw_params_t* params; //硬件信息和PCM流配置
+	unsigned int val;
+	int dir = 0;
+	snd_pcm_uframes_t frames;
+	char *buffer;
+	int channels = wav_header.wChannels;
+	int frequency = wav_header.nSamplesPersec;
+	int bit = wav_header.wBitsPerSample;
+	int datablock = wav_header.wBlockAlign;
+	unsigned char ch[100]; //用来存储wav文件的头信息
+
+	rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
+	if(rc < 0)
+	{
+		perror("\nopen PCM device failed:");
+		exit(1);
+	}
+	snd_pcm_hw_params_alloca(&params); //分配params结构体
+	if(rc < 0)
+	{
+		perror("\nsnd_pcm_hw_params_alloca:");
+		exit(1);
+	}
+	rc = snd_pcm_hw_params_any(handle, params); //初始化params
+	if(rc<0)
+	{
+		perror("\nsnd_pcm_hw_params_any:");
+		exit(1);
+	}
+	rc = snd_pcm_hw_params_set_access(handle, params, SND_PCM_ACCESS_RW_INTERLEAVED); //初始化访问权限
+	if(rc < 0)
+	{
+		perror("\nsed_pcm_hw_set_access:");
+		exit(1);
+	}
+	//采样位数
+	switch(bit / 8) {
+	case 1:
+		snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_U8);
+		break;
+	case 2:
+		snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_S16_LE);
+		break;
+	case 3:
+		snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_S24_LE);
+		break;
+	}
+	rc = snd_pcm_hw_params_set_channels(handle, params, channels); //设置声道,1表示单声>道，2表示立体声
+	if(rc < 0) {
+		perror("\nsnd_pcm_hw_params_set_channels:");
+		exit(1);
+	}
+	val = frequency;
+	rc = snd_pcm_hw_params_set_rate_near(handle, params, &val, &dir); //设置>频率
+	if(rc < 0) {
+		perror("\nsnd_pcm_hw_params_set_rate_near:");
+		exit(1);
+	}
+	rc = snd_pcm_hw_params(handle, params);
+	if(rc < 0) {
+		perror("\nsnd_pcm_hw_params: ");
+		exit(1);
+	}
+	rc = snd_pcm_hw_params_get_period_size(params, &frames, &dir); //获取周期长度
+	if(rc < 0) {
+		perror("\nsnd_pcm_hw_params_get_period_size:");
+		exit(1);
+	}
+	size = frames * datablock; //4 代表数据快长度
+	buffer = (char*)malloc(size);
+	fseek(fp, 54, SEEK_SET); //定位歌曲到数据区
+	int over = 0;
+
 	glfwSetTime(0);
 	do{
+		if(!over) {
+			memset(buffer, 0, size);
+			ret = fread(buffer, 1, size, fp);
+		}
+		if(ret == 0) {
+			printf("歌曲写入结束\n");
+			over = 1;
+			//break;
+		} else if (ret != size) {}
+		// 写音频数据到PCM设备 
+		while(!over && (ret = snd_pcm_writei(handle, buffer, frames) < 0)) {
+			usleep(2000);
+			if(ret == -EPIPE) {
+				// EPIPE means underrun
+				fprintf(stderr, "underrun occurred\n");
+				//完成硬件参数设置，使设备准备好 
+				snd_pcm_prepare(handle);
+			} else if(ret < 0) {
+				fprintf(stderr, "error from writei: %s\n", snd_strerror(ret));
+			}
+		}
+
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -351,13 +461,13 @@ int main(int argc, char **argv)
 		// in the "MVP" uniform
 		double sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-			//sum_l = max(sum_l, ((unsigned short*)data.data)[data_index++]);
-			//sum_r = max(sum_r, ((unsigned short*)data.data)[data_index++]);
-			sum_l += abs(((short*)data.data)[data_index++]);
-			sum_r += abs(((short*)data.data)[data_index++]);
+			sum_l = max(sum_l, abs(((short*)data.data)[data_index++]));
+			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
+			//sum_l += abs(((short*)data.data)[data_index++]);
+			//sum_r += abs(((short*)data.data)[data_index++]);
 		}
-		Model[1][1] = sum_l / bpf / 32768 * cube_height;
-		//Model[1][1] = sum_l / 32768;
+		//Model[1][1] = sum_l / bpf / 32768 * cube_height;
+		Model[1][1] = sum_l / 32768 * cube_height;
 		MVP = PV * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
@@ -388,8 +498,8 @@ int main(int argc, char **argv)
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles
 
-		Model[1][1] = sum_r / bpf / 32768 * cube_height;
-		//Model[1][1] = sum_r / 32768;
+		//Model[1][1] = sum_r / bpf / 32768 * cube_height;
+		Model[1][1] = sum_r / 32768 * cube_height;
 		MVP = PV * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
@@ -432,16 +542,25 @@ int main(int argc, char **argv)
 		printf("%lf %lf %lf %lf\n", accurate_time, current_time, current_time - last_time, delta);
 		delta = delta > 0 ? delta : 0;
 		last_time = current_time;
-		usleep(delta * 1000000);
+		if(current_time > 0.1) usleep(delta * 1000000);
 		//printf("%d\n", data.size);
 		glfwPollEvents();
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
+	snd_pcm_drain(handle);
+	snd_pcm_close(handle);
+	free(buffer);
+	fclose(fp);
+
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer1);
+	glDeleteBuffers(1, &vertexbuffer2);
+	glDeleteBuffers(1, &vertexbuffer3);
+	glDeleteBuffers(1, &vertexbuffer4);
 	glDeleteBuffers(1, &colorbuffer1);
+	glDeleteBuffers(1, &colorbuffer2);
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 
