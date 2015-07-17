@@ -367,14 +367,15 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	size = frames * datablock; //4 代表数据快长度
+	//printf("%d = %lu + %d\n", size, frames, datablock);
 	buffer = (char*)malloc(size);
-	fseek(fp, 54, SEEK_SET); //定位歌曲到数据区
+	fseek(fp, 44, SEEK_SET); //定位歌曲到数据区
 	int over = 0;
 
 	glfwSetTime(0);
 	do{
 		if(!over) {
-			memset(buffer, 0, size);
+			//memset(buffer, 0, size);
 			ret = fread(buffer, 1, size, fp);
 		}
 		if(ret == 0) {
@@ -384,7 +385,7 @@ int main(int argc, char **argv)
 		} else if (ret != size) {}
 		// 写音频数据到PCM设备 
 		while(!over && (ret = snd_pcm_writei(handle, buffer, frames) < 0)) {
-			usleep(2000);
+			//usleep(2000);
 			if(ret == -EPIPE) {
 				// EPIPE means underrun
 				fprintf(stderr, "underrun occurred\n");
@@ -410,24 +411,14 @@ int main(int argc, char **argv)
 
 //		MVP = PV;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glUniform1i(objectID, 1);
-
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
-		glBufferData(GL_ARRAY_BUFFER, bpf * 2, (char *)data.data + data_index, GL_STATIC_DRAW);
-		glVertexAttribPointer(
-			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-			1,                  // size
-			GL_SHORT,           // type
-			GL_FALSE,           // normalized?
-			1,                  // stride
-			(void*)0            // array buffer offset
-		);
 
 		float x[bpf];
 		for(int i = 0; i < bpf; i++) x[i] = 10.0 / bpf * i - 5;
 
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
 		glBufferData(GL_ARRAY_BUFFER, bpf * 4, x, GL_STATIC_DRAW);
 		glVertexAttribPointer(
@@ -439,22 +430,32 @@ int main(int argc, char **argv)
 			(void*)0            // array buffer offset
 		);
 
-		glDrawArrays(GL_LINE_STRIP, 0, bpf); // 12*3 indices starting at 0 -> 12 triangles
-
-		glUniform1i(objectID, 2);
-//		glEnableVertexAttribArray(0);
+		glUniform1i(objectID, 1);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
-//		glBufferData(GL_ARRAY_BUFFER, bpf * 2, (char *)data.data + data_index, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, bpf * 4, (short *)data.data + data_index, GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(
 			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 			1,                  // size
 			GL_SHORT,           // type
 			GL_FALSE,           // normalized?
-			1,                  // stride
+			3,                  // stride
+			(void*)0            // array buffer offset
+		);
+		glDrawArrays(GL_LINE_STRIP, 0, bpf); // 12*3 indices starting at 0 -> 12 triangles
+
+		glUniform1i(objectID, 2);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
+		glBufferData(GL_ARRAY_BUFFER, bpf * 4, (short *)data.data + data_index, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(
+			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+			1,                  // size
+			GL_SHORT,           // type
+			GL_FALSE,           // normalized?
+			3,                  // stride
 			(void*)2            // array buffer offset
 		);
-
 		glDrawArrays(GL_LINE_STRIP, 0, bpf); // 12*3 indices starting at 0 -> 12 triangles
+		usleep(2000);
 
 		glUniform1i(objectID, 0);
 		// Send our transformation to the currently bound shader, 
@@ -472,7 +473,7 @@ int main(int argc, char **argv)
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
+//		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1);
 		glVertexAttribPointer(
 			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
@@ -484,7 +485,7 @@ int main(int argc, char **argv)
 		);
 
 		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
+//		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer1);
 		glVertexAttribPointer(
 			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
@@ -516,7 +517,7 @@ int main(int argc, char **argv)
 		);
 
 		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
+//		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer2);
 		glVertexAttribPointer(
 			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.

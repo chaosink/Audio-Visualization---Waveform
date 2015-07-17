@@ -17,9 +17,9 @@ void main(){
 	if(object == 0)
 		gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
 	else if(object == 1)
-		gl_Position = MVP * vec4(-3.0, vertexPosition_modelspace.x / 32768 * 2, x * 8, 1);
+		gl_Position = MVP * vec4(-5.0, vertexPosition_modelspace.x / 32768 * 4, x * 8, 1);
 	else
-		gl_Position = MVP * vec4( 3.0, vertexPosition_modelspace.x / 32768 * 2, x * 8, 1);
+		gl_Position = MVP * vec4( 5.0, vertexPosition_modelspace.x / 32768 * 4, x * 8, 1);
 
 	// The color of each vertex will be interpolated
 	// to produce the color of each fragment
