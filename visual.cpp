@@ -429,8 +429,8 @@ int main(int argc, char **argv)
 		current_time = glfwGetTime();
 		double accurate_time = data_index / 2.0 / bpf / fps;
 		double delta = accurate_time - current_time;
+		printf("%lf %lf %lf %lf\n", accurate_time, current_time, current_time - last_time, delta);
 		delta = delta > 0 ? delta : 0;
-		printf("%lf %lf %lf\n", accurate_time, current_time, current_time - last_time);
 		last_time = current_time;
 		usleep(delta * 1000000);
 		//printf("%d\n", data.size);
