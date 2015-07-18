@@ -10,16 +10,23 @@ uniform mat4 MVP;
 uniform int object;
 
 int color_factor = 8;
-float size_factor = 0.05;
+float size_factor = 0.01;
+float size_factor1 = 0.1;
 
 bool zhuangbi = true;
 #define ZHUANGBI
 
 void main() {
+	
 	mat4 scale = mat4(
 		 size_factor, 0.0, 0.0, 0.0,
 		 0.0, 1.0, 0.0, 0.0,
 		 0.0, 0.0, size_factor, 0.0,
+		 0.0, 0.0, 0.0, 1.0);
+	mat4 scale1 = mat4(
+		 size_factor1, 0.0, 0.0, 0.0,
+		 0.0, 1.0, 0.0, 0.0,
+		 0.0, 0.0, size_factor1, 0.0,
 		 0.0, 0.0, 0.0, 1.0);
 	switch(object) {
 		case 1:

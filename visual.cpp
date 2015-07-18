@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 		{GL_GEOMETRY_SHADER, "GeometryShader.geom"},
 		{GL_NONE, NULL}};
 	GLuint programID = LoadShaders(shaders);*/
-	GLuint programID = LoadShaders("VertexShader.vert", "FragmentShader.frag", "GeometryShader.geom");
+	GLuint programID = LoadShaders("VertexShader.vert", "FragmentShader.frag", NULL);//"GeometryShader.geom");
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
@@ -285,6 +285,7 @@ int main(int argc, char **argv) {
 	int data_index = 0;
 	double current_time;
 	double last_time;
+	double total_time = data.size / data.sampling_rate / 4;
 
 	int res;
 	pthread_t a_thread;
@@ -487,7 +488,7 @@ int main(int argc, char **argv) {
 		current_time = glfwGetTime();
 		double accurate_time = data_index / 2.0 / bpf / fps;
 		double delta = accurate_time - current_time;
-		printf("%lf %lf %lf %lf\n", accurate_time, current_time, current_time - last_time, delta);
+		printf("%lf %lf %lf %lf %lf\n", current_time - last_time, accurate_time, current_time, delta, total_time - current_time);
 		delta = delta > 0 ? delta : 0;
 		last_time = current_time;
 		usleep(delta * 1000000);
