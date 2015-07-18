@@ -8,6 +8,7 @@ out vec3 fragmentColor;
 
 uniform mat4 MVP;
 uniform int object;
+uniform float top;
 
 int color_factor = 8;
 float size_factor = 0.01;
@@ -44,10 +45,10 @@ void main() {
 			gl_Position = MVP * vec4( 5.0, vertexPosition_modelspace.x / 32768 * wave_height, z, 1);
 			break;
 		case 4: //left top
-			gl_Position = MVP * scale1 * vec4(vertexPosition_modelspace, 1);
+			gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
 			break;
 		case 5: //right top
-			gl_Position = MVP * scale1 * vec4(vertexPosition_modelspace, 1);
+			gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
 			break;
 		case 6: //spectrum
 			gl_Position = MVP * vec4(0, vertexPosition_modelspace.x, z, 1);
@@ -70,11 +71,11 @@ void main() {
 		case 3: //right wave
 			fragmentColor = zhuangbi ? vec3(0.5, (z + 10.0)/ 20.0, vertexPosition_modelspace.x / 32768 * 0.8 + 0.2) : fragmentColor = vec3(0.5, 0.5, 1.0);;
 			break;
-		case 4: //left top
-			fragmentColor = vec3(1.0, (1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1, (1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1);
+		case 4: //left top (1.0 - pow(gl_Position.w, 2) / color_factor) * 0.7 + 0.3
+			fragmentColor = vec3(1.0, top / 2, top / 2);
 			break;
 		case 5: //right top
-			fragmentColor = vec3((1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1, (1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1, 1.0);
+			fragmentColor = vec3(top / 2, top / 2, 1.0);
 			break;
 		case 6: //spectrum log(vertexPosition_modelspace.x + 1) / 3 * 0.8 + 0.2
 			fragmentColor = vec3(abs(z) / 10.0, (z + 10.0)/ 20.0, (log(vertexPosition_modelspace.x + 1) / 3 * 0.8) * (z + 10) / 5 + 0.2);

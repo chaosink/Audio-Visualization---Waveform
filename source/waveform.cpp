@@ -20,7 +20,7 @@ GLFWwindow* window;
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
 const int fps = 40;
-const int column_height = 4;
+const int column_height = 2;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.001;
@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
+	GLuint topID = glGetUniformLocation(programID, "top");
 
 	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	glm::mat4 View       = glm::lookAt(
@@ -405,13 +406,13 @@ int main(int argc, char **argv) {
 
 		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-			//sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //sum
-			//sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
-			sum_l += abs(((short*)data.data)[data_index++]); //avg
-			sum_r += abs(((short*)data.data)[data_index++]);
+			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //sum
+			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
+//			sum_l += abs(((short*)data.data)[data_index++]); //avg
+//			sum_r += abs(((short*)data.data)[data_index++]);
 		}
-		sum_l /= bpf; //avg
-		sum_r /= bpf;
+//		sum_l /= bpf; //avg
+//		sum_r /= bpf;
 
 
 
@@ -458,13 +459,14 @@ int main(int argc, char **argv) {
 			 0.0, 0.0, 1.0, 0.0,
 			-2.0, max_l * 2, 0.0, 1.0);
 		scale1 = glm::mat4(
-			1.0, 0.0, 0.0, 0.0,
-			0.0, top_height, 0.0, 0.0,
-			0.0, 0.0, 1.0, 0.0,
-			0.0, 0.0, 0.0, 0.25 / max_l);
+			max_l / 2, 0.0, 0.0, 0.0,
+			0.0, max_l / 2 * top_height, 0.0, 0.0,
+			0.0, 0.0, max_l / 2, 0.0,
+			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate1 * scale1;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 4);
+		glUniform1f(topID, max_l);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left top
 
 
@@ -512,13 +514,14 @@ int main(int argc, char **argv) {
 			 0.0, 0.0, 1.0, 0.0,
 			 2.0, max_r * 2, 0.0, 1.0);
 		scale2 = glm::mat4(
-			1.0, 0.0, 0.0, 0.0,
-			0.0, top_height, 0.0, 0.0,
-			0.0, 0.0, 1.0, 0.0,
-			0.0, 0.0, 0.0, 0.25 / max_r);//(4.0 - max_r) * (4.0 - max_r));
+			max_r / 2, 0.0, 0.0, 0.0,
+			0.0, max_r / 2 * top_height, 0.0, 0.0,
+			0.0, 0.0, max_r / 2, 0.0,
+			0.0, 0.0, 0.0, 1.0);//0.25 / max_r);//(4.0 - max_r) * (4.0 - max_r));
 		MVP = PV * translate2 * scale2;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
+		glUniform1f(topID, max_r);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right top
 
 
