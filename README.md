@@ -1,7 +1,9 @@
 # Audio-Visualization---Waveform
 An audio visualizer.
 
-WAV files(16 bits, 2 channels) supported only for now.
+WAV(16 bits, 2 channels) files supported only for now.
+
+Visualized by GLSL.
 
 # Compiling
 ```shell
