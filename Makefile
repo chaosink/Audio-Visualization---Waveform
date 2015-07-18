@@ -1,15 +1,26 @@
 GLFW = `pkg-config --cflags glfw3` `pkg-config --libs --static glfw3`
 GLEW = `pkg-config --cflags glew` `pkg-config --libs glew`
-common = ./common/shader.cpp ./common/text2D.cpp ./common/objloader.cpp ./common/controls.cpp ./common/texture.cpp
-other = audio_data.cpp play_wav.cpp
-build_path = build/
-lib = -lasound -lpthread
-inc = -I. -I/usr/local/include/GLFW/
-macro = -D_REENTRANT
-target = visual
+LIBRARY = -lasound -lpthread
+INCLUDE = -I$(SOURCE_PATH) -I/usr/local/include/GLFW/
+MACRO = -D_REENTRANT
 
-all: $(target)
+SOURCE_PATH = source/
+HPP = \
+	$(SOURCE_PATH)audio_data/audio_data.hpp \
+	$(SOURCE_PATH)play_wav/play_wav.hpp \
+	$(SOURCE_PATH)common/shader.hpp \
+	$(SOURCE_PATH)common/objloader.hpp \
+	$(SOURCE_PATH)common/controls.hpp
+CPP = \
+	$(SOURCE_PATH)audio_data/audio_data.cpp \
+	$(SOURCE_PATH)play_wav/play_wav.cpp \
+	$(SOURCE_PATH)common/shader.cpp \
+	$(SOURCE_PATH)common/objloader.cpp \
+	$(SOURCE_PATH)common/controls.cpp $(SOURCE_PATH)visual.cpp
+BUILD_PATH = build/
+TARGET = $(BUILD_PATH)visual
 
-$(target): $(target).cpp
-	clang++ $(macro) $(target).cpp $(common) $(other) -o $(build_path)$(target) $(GLFW) $(GLEW) $(lib) $(inc)
+all: $(TARGET)
 
+$(TARGET): $(CPP) $(HPP)
+	clang++ $(CPP) -o $(TARGET) $(GLFW) $(GLEW) $(LIBRARY) $(INCLUDE) $(MACRO)
