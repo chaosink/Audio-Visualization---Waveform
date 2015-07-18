@@ -1,6 +1,6 @@
 GLFW = `pkg-config --cflags glfw3` `pkg-config --libs --static glfw3`
 GLEW = `pkg-config --cflags glew` `pkg-config --libs glew`
-common = ./common/shader.cpp ./common/text2D.cpp ./common/objloader.cpp ./common/controls.cpp ./common/texture.cpp
+common = ./common/shader.cpp ./common/objloader.cpp ./common/controls.cpp
 other = audio_data.cpp play_wav.cpp
 build_path = build/
 lib = -lasound -lpthread

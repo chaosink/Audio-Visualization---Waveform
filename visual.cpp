@@ -10,6 +10,7 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 //using namespace glm;
 
+//#include <common/load_shaders.hpp>
 #include <common/shader.hpp>
 #include <common/controls.hpp>
 #include "audio_data.hpp"
@@ -17,10 +18,10 @@ GLFWwindow* window;
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-const int fps = 59;
+const int fps = 30;
 const int cube_height = 4;
 const int waveform_interval = 1;
-const float waveform_length = 10.0;
+const float waveform_length = 20.0;
 const float top_height = 0.02;
 const float top_speed = 0.02;
 
@@ -61,7 +62,8 @@ int main(int argc, char **argv) {
 
 
 
-	glClearColor(0.f / 255.f, 15.f / 255.f, 0.f / 255.f, 1.0f);
+//	glClearColor(0.f / 255.f, 63.f / 255.f, 0.f / 255.f, 1.0f);
+	glClearColor(0.1, 0.1, 0.1, 1.0);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS); 
 
@@ -69,7 +71,13 @@ int main(int argc, char **argv) {
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
-	GLuint programID = LoadShaders( "VertexShader.vert", "FragmentShader.frag" );
+/*	ShaderInfo shaders[] = {
+		{GL_VERTEX_SHADER, "VertexShader.vert"},
+		{GL_FRAGMENT_SHADER, "FragmentShader.frag"},
+		{GL_GEOMETRY_SHADER, "GeometryShader.geom"},
+		{GL_NONE, NULL}};
+	GLuint programID = LoadShaders(shaders);*/
+	GLuint programID = LoadShaders("VertexShader.vert", "FragmentShader.frag", "GeometryShader.geom");
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
@@ -326,7 +334,7 @@ int main(int argc, char **argv) {
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
 		glBufferData(GL_ARRAY_BUFFER, bpf * 4, (short *)data.data + data_index, GL_DYNAMIC_DRAW);
-		
+
 		glUniform1i(objectID, 1);
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -418,7 +426,7 @@ int main(int argc, char **argv) {
 
 
 		float scale_r = sum_r / 32768 * cube_height;
-		glUniform1i(objectID, 0);
+		glUniform1i(objectID, 5);
 		Model = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
