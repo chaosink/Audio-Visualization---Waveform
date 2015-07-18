@@ -15,11 +15,12 @@ GLFWwindow* window;
 #include <common/controls.hpp>
 #include "audio_data/audio_data.hpp"
 #include "play_wav/play_wav.hpp"
+#include "fft/fft.hpp"
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-const int fps = 30;
-const int cube_height = 4;
+const int fps = 40;
+const int column_height = 4;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.02;
@@ -251,21 +252,24 @@ int main(int argc, char **argv) {
 
 
 
-	GLuint vertexbuffer1;
+	GLuint vertexbuffer1; //left column
 	glGenBuffers(1, &vertexbuffer1);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data1), g_vertex_buffer_data1, GL_STATIC_DRAW);
 
-	GLuint vertexbuffer2;
+	GLuint vertexbuffer2; //right column
 	glGenBuffers(1, &vertexbuffer2);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data2), g_vertex_buffer_data2, GL_STATIC_DRAW);
 
-	GLuint vertexbuffer3;
+	GLuint vertexbuffer3; //waveform
 	glGenBuffers(1, &vertexbuffer3);
 
-	GLuint vertexbuffer4;
+	GLuint vertexbuffer4; //z
 	glGenBuffers(1, &vertexbuffer4);
+
+	GLuint vertexbuffer5; //spectrum
+	glGenBuffers(1, &vertexbuffer5);
 
 	GLuint colorbuffer1;
 	glGenBuffers(1, &colorbuffer1);
@@ -285,6 +289,10 @@ int main(int argc, char **argv) {
 	double current_time;
 	double last_time;
 	double total_time = data.size / data.sampling_rate / 4;
+	float z[bpf * 2];
+	for(int i = 0; i < bpf; i++) z[i * 2] = z[i * 2 + 1] = waveform_length / bpf * i - waveform_length / 2;
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
+	glBufferData(GL_ARRAY_BUFFER, bpf * 8, z, GL_STATIC_DRAW);
 
 	int res;
 	pthread_t a_thread;
@@ -295,7 +303,9 @@ int main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-
+	FFT fft;
+	fft.setDataSize(bpf);
+	fft.setSampleRate(data.sampling_rate);
 
 	float max_l = 0, max_r = 0;
 	glfwSetTime(0);
@@ -317,48 +327,82 @@ int main(int argc, char **argv) {
 
 
 
-		float z[bpf];
-		for(int i = 0; i < bpf; i++) z[i] = waveform_length / bpf * i - waveform_length / 2;
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
-		glBufferData(GL_ARRAY_BUFFER, bpf * 4, z, GL_STATIC_DRAW);
+		float *FFTdata = fft.calculateFFT((short *)data.data + data_index);
+		int spectrum_interval = fps / 2;
+		for(int i = 0; i < bpf; i++) {
+			for(int j = 1; j < spectrum_interval; j++)
+				FFTdata[i * spectrum_interval] += FFTdata[i * spectrum_interval + j];
+			FFTdata[i * spectrum_interval] /= spectrum_interval * 10;
+//			FFTdata[i * spectrum_interval] = log(FFTdata[i * spectrum_interval] + 1);
+			FFTdata[i * spectrum_interval + spectrum_interval / 2] = 0;
+		}
+/*		float ma = 0;//spectrum_interval * bpf
+		for(int i = 0; i < bpf; i++) ma = max(ma, FFTdata[i * spectrum_interval]);
+		std::cout << ma << std::endl;*/
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
 			GL_FLOAT,				//type
 			GL_FALSE,				//normalized?
-			waveform_interval * 4,	//stride
+			0,						//stride
 			(void *)0				//array buffer offset
 		);
 
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //spectrum
+		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
+		glVertexAttribPointer(
+			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
+			1,						//size
+			GL_FLOAT,				//type
+			GL_FALSE,				//normalized?
+			spectrum_interval * 2,	//stride
+			(void *)0				//array buffer offset
+		);
+		glUniform1i(objectID, 6);
+		glDrawArrays(GL_LINES, 0, bpf * 2);
 
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
+		glVertexAttribPointer(
+			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
+			1,						//size
+			GL_FLOAT,				//type
+			GL_FALSE,				//normalized?
+			(waveform_interval + 1) * 4,
+									//stride
+			(void *)0				//array buffer offset
+		);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
 		glBufferData(GL_ARRAY_BUFFER, bpf * 4, (short *)data.data + data_index, GL_DYNAMIC_DRAW);
 
-		glUniform1i(objectID, 1);
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
 			GL_SHORT,				//type
 			GL_FALSE,				//normalized?
-			waveform_interval * 2,	//stride
+			waveform_interval * 4,	//stride
 			(void *)0				//array buffer offset
 		);
+		glUniform1i(objectID, 2);
 		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval);
 
-		glUniform1i(objectID, 2);
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
 			GL_SHORT,				//type
 			GL_FALSE,				//normalized?
-			waveform_interval * 2,	//stride
+			waveform_interval * 4,	//stride
 			(void *)2				//array buffer offset
 		);
+		glUniform1i(objectID, 3);
 		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval);
 
 
-		
+
 		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
 			//sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //sum
@@ -371,8 +415,7 @@ int main(int argc, char **argv) {
 
 
 
-		float scale_l = sum_l / 32768 * cube_height;
-		glUniform1i(objectID, 0);
+		float scale_l = sum_l / 32768 * column_height;
 		Model = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -403,12 +446,11 @@ int main(int argc, char **argv) {
 			0,			// stride
 			(void *)0	// array buffer offset
 		);
+		glUniform1i(objectID, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 		if(scale_l + top_height > max_l) max_l = scale_l + top_height;
 		else max_l -= top_speed;
 
-
-		glUniform1i(objectID, 3);
 		glm::mat4 translate1 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -421,12 +463,12 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate1 * scale1;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		glUniform1i(objectID, 4);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 
 
 
-		float scale_r = sum_r / 32768 * cube_height;
-		glUniform1i(objectID, 5);
+		float scale_r = sum_r / 32768 * column_height;
 		Model = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -457,11 +499,11 @@ int main(int argc, char **argv) {
 			0,			// stride
 			(void*)0	// array buffer offset
 		);
+		glUniform1i(objectID, 1);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 		if(scale_r + top_height > max_r) max_r = scale_r + top_height;
 		else max_r -= top_speed;
 
-		glUniform1i(objectID, 4);
 		glm::mat4 translate2 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -474,6 +516,7 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate2 * scale2;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		glUniform1i(objectID, 5);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 
 
@@ -482,15 +525,17 @@ int main(int argc, char **argv) {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
-		glfwSwapBuffers(window);
 		if(data_index >= data.size / 2) break;
 		current_time = glfwGetTime();
+		double left_time = total_time - current_time;
+		if(left_time <= 0) break;
 		double accurate_time = data_index / 2.0 / bpf / fps;
 		double delta = accurate_time - current_time;
-		printf("%lf %lf %lf %lf %lf\n", current_time - last_time, accurate_time, current_time, delta, total_time - current_time);
+		printf("%lf %lf %lf %lf %lf\n", current_time - last_time, accurate_time, current_time, delta, left_time);
 		delta = delta > 0 ? delta : 0;
 		last_time = current_time;
 		usleep(delta * 1000000);
+		glfwSwapBuffers(window);
 		glfwPollEvents();
 	} while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window));
 
@@ -505,6 +550,7 @@ int main(int argc, char **argv) {
 	glDeleteBuffers(1, &vertexbuffer2);
 	glDeleteBuffers(1, &vertexbuffer3);
 	glDeleteBuffers(1, &vertexbuffer4);
+	glDeleteBuffers(1, &vertexbuffer5);
 	glDeleteBuffers(1, &colorbuffer1);
 	glDeleteBuffers(1, &colorbuffer2);
 	glDeleteProgram(programID);
