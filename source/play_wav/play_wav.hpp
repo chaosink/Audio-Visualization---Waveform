@@ -18,6 +18,6 @@ struct WAV_HEADER {
     int wSampleLength; //音频数据的大小
 };
 
-int play_wav(char *fp);
+int play_wav(char *file);
 
 #endif

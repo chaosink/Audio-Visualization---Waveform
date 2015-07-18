@@ -29,3 +29,6 @@
 
 # Directory
 build/
+
+# Target
+waveform
