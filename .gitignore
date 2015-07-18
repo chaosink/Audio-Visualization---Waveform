@@ -29,4 +29,6 @@
 
 # Directory
 build/
-!build/shader/
+
+# Target
+waveform

@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 		{GL_GEOMETRY_SHADER, "GeometryShader.geom"},
 		{GL_NONE, NULL}};
 	GLuint programID = LoadShaders(shaders);*/
-	GLuint programID = LoadShaders("shader/VertexShader.vert", "shader/FragmentShader.frag", NULL);//"shader/GeometryShader.geom");
+	GLuint programID = LoadShaders("shaders/VertexShader.vert", "shaders/FragmentShader.frag", NULL);//"shaders/GeometryShader.geom");
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
