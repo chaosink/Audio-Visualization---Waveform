@@ -13,8 +13,8 @@ GLFWwindow* window;
 //#include <common/load_shaders.hpp>
 #include <common/shader.hpp>
 #include <common/controls.hpp>
-#include "audio_data.hpp"
-#include "play_wav.hpp"
+#include "audio_data/audio_data.hpp"
+#include "play_wav/play_wav.hpp"
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 		{GL_GEOMETRY_SHADER, "GeometryShader.geom"},
 		{GL_NONE, NULL}};
 	GLuint programID = LoadShaders(shaders);*/
-	GLuint programID = LoadShaders("VertexShader.vert", "FragmentShader.frag", NULL);//"GeometryShader.geom");
+	GLuint programID = LoadShaders("shader/VertexShader.vert", "shader/FragmentShader.frag", NULL);//"shader/GeometryShader.geom");
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
@@ -421,7 +421,7 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate1 * scale1;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-//		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 
 
 
@@ -474,7 +474,7 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate2 * scale2;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-//		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 
 
 
