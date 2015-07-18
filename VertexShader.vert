@@ -10,7 +10,7 @@ uniform mat4 MVP;
 uniform int object;
 
 int color_factor = 8;
-float size_factor = 0.05;
+float size_factor = 0.01;
 
 bool zhuangbi = true;
 #define ZHUANGBI

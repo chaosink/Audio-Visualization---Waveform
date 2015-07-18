@@ -17,7 +17,7 @@ void main() {
 	for(int k = -5; k < num; k++)
 		for(int j = -5; j < num; j++) {
 			for(int i = 0; i < gl_in.length(); ++i) {
-				gl_Position = gl_in[i].gl_Position + vec4( size * j, size * k, 0.0, 0.0);
+				gl_Position = gl_in[i].gl_Position + vec4( size * j + size / 2, size * k + size / 2, 0.0, 0.0);
 				Color = fragmentColor[i];
 				EmitVertex();
 			}
