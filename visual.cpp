@@ -86,8 +86,7 @@ int main(int argc, char **argv) {
 	glm::mat4 View       = glm::lookAt(
 		glm::vec3(10,15,20),	//Camera is at (4,3,-3), in World Space
 		glm::vec3(0,0,0),		//and looks at the origin
-		glm::vec3(0,1,0)		//Head is up (set to 0,-1,0 to look upside-down)
-	);
+		glm::vec3(0,1,0));		//Head is up (set to 0,-1,0 to look upside-down)
 	glm::mat4 Model      = glm::mat4(1.0f);
 	glm::mat4 PV         = Projection * View;
 	glm::mat4 MVP        = PV * Model;
@@ -422,7 +421,7 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate1 * scale1;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+//		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 
 
 
@@ -475,7 +474,7 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * translate2 * scale2;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+//		glDrawArrays(GL_TRIANGLES, 0, 12*3);
 
 
 

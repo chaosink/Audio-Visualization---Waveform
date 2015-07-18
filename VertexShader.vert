@@ -17,7 +17,6 @@ bool zhuangbi = true;
 #define ZHUANGBI
 
 void main() {
-	
 	mat4 scale = mat4(
 		 size_factor, 0.0, 0.0, 0.0,
 		 0.0, 1.0, 0.0, 0.0,
