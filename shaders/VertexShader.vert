@@ -71,10 +71,10 @@ void main() {
 			fragmentColor = zhuangbi ? vec3(0.5, (z + 10.0)/ 20.0, vertexPosition_modelspace.x / 32768 * 0.8 + 0.2) : fragmentColor = vec3(0.5, 0.5, 1.0);;
 			break;
 		case 4: //left top
-			fragmentColor = vec3(1.0, gl_Position.y / color_factor, gl_Position.y / color_factor);
+			fragmentColor = vec3(1.0, (1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1, (1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1);
 			break;
 		case 5: //right top
-			fragmentColor = vec3(gl_Position.y / color_factor, gl_Position.y / color_factor, 1.0);
+			fragmentColor = vec3((1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1, (1.0 - pow(gl_Position.w, 1) / color_factor) * 0.9 + 0.1, 1.0);
 			break;
 		case 6: //spectrum log(vertexPosition_modelspace.x + 1) / 3 * 0.8 + 0.2
 			fragmentColor = vec3(abs(z) / 10.0, (z + 10.0)/ 20.0, (log(vertexPosition_modelspace.x + 1) / 3 * 0.8) * (z + 10) / 5 + 0.2);

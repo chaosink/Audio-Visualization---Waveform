@@ -23,7 +23,7 @@ const int fps = 40;
 const int column_height = 4;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
-const float top_height = 0.02;
+const float top_height = 0.001;
 const float top_speed = 0.02;
 
 void *play_wav_d(void *file) {
@@ -361,11 +361,11 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
-		glDrawArrays(GL_LINES, 0, bpf * 2);
+		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
 
 
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
@@ -376,7 +376,7 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer3); //waveform
 		glBufferData(GL_ARRAY_BUFFER, bpf * 4, (short *)data.data + data_index, GL_DYNAMIC_DRAW);
 
 		glVertexAttribPointer(
@@ -388,7 +388,7 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 2);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval);
+		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw left waveform
 
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -399,7 +399,7 @@ int main(int argc, char **argv) {
 			(void *)2				//array buffer offset
 		);
 		glUniform1i(objectID, 3);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval);
+		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw right waveform
 
 
 
@@ -428,7 +428,8 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * scale1 * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer1); //left column vertex
 		glVertexAttribPointer(
 			0,			// attribute. No particular reason for 0, but must match the layout in the shader.
 			3,			// size
@@ -437,7 +438,7 @@ int main(int argc, char **argv) {
 			0,			// stride
 			(void *)0	// array buffer offset
 		);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer1);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer1);  //left column color
 		glVertexAttribPointer(
 			1,			// attribute. No particular reason for 1, but must match the layout in the shader.
 			3,			// size
@@ -447,10 +448,10 @@ int main(int argc, char **argv) {
 			(void *)0	// array buffer offset
 		);
 		glUniform1i(objectID, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left column
+		
 		if(scale_l + top_height > max_l) max_l = scale_l + top_height;
 		else max_l -= top_speed;
-
 		glm::mat4 translate1 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -460,11 +461,11 @@ int main(int argc, char **argv) {
 			1.0, 0.0, 0.0, 0.0,
 			0.0, top_height, 0.0, 0.0,
 			0.0, 0.0, 1.0, 0.0,
-			0.0, 0.0, 0.0, 1.0);
+			0.0, 0.0, 0.0, 0.25 / max_l);
 		MVP = PV * translate1 * scale1;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 4);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left top
 
 
 
@@ -481,7 +482,8 @@ int main(int argc, char **argv) {
 			0.0, 0.0, 0.0, 1.0);
 		MVP = PV * scale2 * Model;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer2); //right column vertex
 		glVertexAttribPointer(
 			0,			// attribute. No particular reason for 0, but must match the layout in the shader.
 			3,			// size
@@ -490,7 +492,7 @@ int main(int argc, char **argv) {
 			0,			// stride
 			(void*)0	// array buffer offset
 		);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer2);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer2); //right column vertex
 		glVertexAttribPointer(
 			1,			// attribute. No particular reason for 1, but must match the layout in the shader.
 			3,			// size
@@ -500,10 +502,10 @@ int main(int argc, char **argv) {
 			(void*)0	// array buffer offset
 		);
 		glUniform1i(objectID, 1);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right column
+
 		if(scale_r + top_height > max_r) max_r = scale_r + top_height;
 		else max_r -= top_speed;
-
 		glm::mat4 translate2 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -513,11 +515,11 @@ int main(int argc, char **argv) {
 			1.0, 0.0, 0.0, 0.0,
 			0.0, top_height, 0.0, 0.0,
 			0.0, 0.0, 1.0, 0.0,
-			0.0, 0.0, 0.0, 1.0);
+			0.0, 0.0, 0.0, 0.25 / max_r);//(4.0 - max_r) * (4.0 - max_r));
 		MVP = PV * translate2 * scale2;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3);
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right top
 
 
 
