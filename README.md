@@ -8,7 +8,6 @@ Visualized by `GLSL`.
 # Compiling
 ```shell
 make
-cd build
 ./waveform your_wav.wav
 ```
 
