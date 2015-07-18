@@ -4,6 +4,7 @@ LIBRARY = -lasound -lpthread
 INCLUDE = -I$(SOURCE_PATH) -I/usr/local/include/GLFW/
 MACRO = -D_REENTRANT
 
+BINARY = waveform
 SOURCE_PATH = source/
 HPP = \
 	$(SOURCE_PATH)audio_data/audio_data.hpp \
@@ -16,9 +17,9 @@ CPP = \
 	$(SOURCE_PATH)play_wav/play_wav.cpp \
 	$(SOURCE_PATH)common/shader.cpp \
 	$(SOURCE_PATH)common/objloader.cpp \
-	$(SOURCE_PATH)common/controls.cpp $(SOURCE_PATH)visual.cpp
+	$(SOURCE_PATH)common/controls.cpp $(SOURCE_PATH)waveform.cpp
 BUILD_PATH = build/
-TARGET = $(BUILD_PATH)visual
+TARGET = $(BUILD_PATH)$(BINARY)
 
 all: $(TARGET)
 

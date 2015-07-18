@@ -29,3 +29,4 @@
 
 # Directory
 build/
+!build/shader/

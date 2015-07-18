@@ -1,7 +1,21 @@
 # Audio-Visualization---Waveform
 An audio visualizer.
 
-# Screenshot
+# Compile
+```shell
+make
+cd build
+./waveform your_wav.wav
+```
+
+# Dependencies
+[GLFW - An OpenGL library](http://www.glfw.org/)
+
+[GLEW - The OpenGL Extension Wrangler Library](http://glew.sourceforge.net/)
+
+[ALSA - Advanced Linux Sound Architecture](http://www.alsa-project.org/main/index.php/Main_Page)
+
+# Screenshots
 ![1.png](./screenshot/1.png)
 
 ![2.png](./screenshot/2.png)
