@@ -19,10 +19,10 @@ make
 [ALSA - Advanced Linux Sound Architecture](http://www.alsa-project.org/main/index.php/Main_Page)
 
 # Screenshots
-![1.png](./screenshot/1.png)
+![1.png](./screenshots/1.png)
 
-![2.png](./screenshot/2.png)
+![2.png](./screenshots/2.png)
 
-![3.png](./screenshot/3.png)
+![3.png](./screenshots/3.png)
 
-![4.png](./screenshot/4.png)
+![4.png](./screenshots/4.png)
