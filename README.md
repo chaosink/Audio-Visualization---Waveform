@@ -1,7 +1,9 @@
 # Audio-Visualization---Waveform
 An audio visualizer.
 
-# Compile
+WAV files(16 bits, 2 channels) supported only for now.
+
+# Compiling
 ```shell
 make
 cd build
