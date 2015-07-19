@@ -25,7 +25,7 @@ const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.01;
 const float top_speed = 0.02;
-const int column_interval = 16;
+const int column_interval = 8;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -340,7 +340,7 @@ int main(int argc, char **argv) {
 
 
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
+/*		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
@@ -362,7 +362,7 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
-		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
+		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum*/
 
 
 glUseProgram(0);
@@ -394,7 +394,7 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 
 
 
-		glUseProgram(programID);
+/*		glUseProgram(programID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -418,7 +418,7 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 2);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw left waveform
+		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw left waveform*/
 
 /*		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
