@@ -25,7 +25,7 @@ const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.01;
 const float top_speed = 0.02;
-const int column_interval = 8;
+const int column_interval = 4;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
