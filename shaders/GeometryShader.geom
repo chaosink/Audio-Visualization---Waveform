@@ -1,7 +1,7 @@
 #version 330
 
 layout(points) in;
-layout(points, max_vertices = 512) out;
+layout(line_strip, max_vertices = 511) out;
 
 uniform mat4 MVP;
 
@@ -9,7 +9,7 @@ in vec3 fragmentColor[];
 out vec3 Color;
 
 float length = 0.05;
-
+int side = 100;
 float pi = 3.141592653589793238462643383279502884197169399;
 
 mat4 rotate = mat4(
@@ -20,7 +20,7 @@ mat4 rotate = mat4(
 
 void main() {
 for(int i = 0; i < gl_in.length(); i++) {
-	for(float j = 0; j < 2 * pi; j += pi / 100) {
+	for(float j = 0; j < 2 * pi; j += 2 * pi / side) {
 		rotate = mat4(
 			 cos(j), -sin(j), 0.0, 0.0,
 			 sin(j), cos(j), 0.0, 0.0,
@@ -29,7 +29,10 @@ for(int i = 0; i < gl_in.length(); i++) {
 		gl_Position = MVP * rotate * (gl_in[i].gl_Position);
 		Color = fragmentColor[i];
 		EmitVertex();
-		EndPrimitive();
 	}
+	gl_Position = MVP * (gl_in[i].gl_Position);
+	Color = fragmentColor[i];
+	EmitVertex();
+	EndPrimitive();
 }
 }
