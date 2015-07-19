@@ -19,10 +19,14 @@ make
 [ALSA - Advanced Linux Sound Architecture](http://www.alsa-project.org/main/index.php/Main_Page)
 
 # Screenshots
-![1.png](./screenshots/1.png)
+Spectrum, waveform, level
+![1-1.png](./screenshots/1-1.png)
 
-![2.png](./screenshots/2.png)
+![1-2.png](./screenshots/1-2.png)
 
-![3.png](./screenshots/3.png)
+Spectrum, waveform, sine
+![2-1.png](./screenshots/2-1.png)
 
-![4.png](./screenshots/4.png)
+![2-2.png](./screenshots/2-2.png)
+
+![2-3.png](./screenshots/2-3.png)

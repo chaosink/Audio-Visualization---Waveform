@@ -350,7 +350,7 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //left spectrum
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //spectrum
 		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -362,35 +362,11 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
-		glDrawArrays(GL_LINES, 0, bpf * 2); //draw left spectrum
-
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
-		glVertexAttribPointer(
-			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
-			1,						//size
-			GL_FLOAT,				//type
-			GL_FALSE,				//normalized?
-			0,						//stride
-			(void *)0				//array buffer offset
-		);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //right spectrum
-		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
-		glVertexAttribPointer(
-			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
-			1,						//size
-			GL_FLOAT,				//type
-			GL_FALSE,				//normalized?
-			spectrum_interval * 4 / 2,
-									//stride
-			(void *)0				//array buffer offset
-		);
-		glUniform1i(objectID, 7);
-		glDrawArrays(GL_LINES, 0, bpf * 2); //draw right spectrum
+		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
 
 
-
-for(int i = 0; i < bpf; i += bpf / 30) {//if(i == 10 * bpf / 100) {
+glUniform1i(objectID, 7);
+for(int i = 0; i < bpf; i += bpf / 30) { //if(FFTdata[i * spectrum_interval] > 1) { //if(i == 10 * bpf / 100) {
 	int frequency_interval = data.sampling_rate / 2 / bpf;
 	int frequency = i * frequency_interval;
 	float sine_vertex[bpf];
@@ -416,7 +392,6 @@ for(int i = 0; i < bpf; i += bpf / 30) {//if(i == 10 * bpf / 100) {
 									//stride
 			(void *)0				//array buffer offset
 		);
-		glUniform1i(objectID, 8);
 		glUniform1f(glGetUniformLocation(programID, "sine_z"), z[i * 2]);
 		glDrawArrays(GL_LINE_STRIP, 0, bpf); //draw spectrum
 }
