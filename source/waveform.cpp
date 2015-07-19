@@ -467,9 +467,8 @@ int main(int argc, char **argv) {
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 4);
 		glUniform1f(topID, max_l);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left top
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left upper top
 
-		
 		translate1 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
 			 0.0, 1.0, 0.0, 0.0,
@@ -484,7 +483,7 @@ int main(int argc, char **argv) {
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 4);
 		glUniform1f(topID, scale_l);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left top
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left lower top
 
 
 
@@ -539,7 +538,7 @@ int main(int argc, char **argv) {
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
 		glUniform1f(topID, max_r);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right top
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right upper top
 
 		translate2 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
@@ -555,7 +554,7 @@ int main(int argc, char **argv) {
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
 		glUniform1f(topID, scale_r);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right top
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top
 
 
 
