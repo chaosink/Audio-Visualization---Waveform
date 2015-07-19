@@ -39,7 +39,7 @@ void main() {
 			break;
 		#endif
 		case 2: //left wave
-			gl_Position = MVP * (vec4(z, vertexPosition_modelspace.x / 32768 * wave_height, 0, 1) + vec4(0.0, 0.0,-10.0, 0.0));
+			gl_Position = MVP * vec4(z, vertexPosition_modelspace.x / 32768 * wave_height,-10.0, 1);
 			break;
 		case 3: //right wave
 			gl_Position = MVP * vec4( 5.0, vertexPosition_modelspace.x / 32768 * wave_height, z, 1);
@@ -51,10 +51,10 @@ void main() {
 			gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
 			break;
 		case 6: //spectrum
-			gl_Position = MVP * (vec4(0, vertexPosition_modelspace.x, z, 1) + vec4(-10.0, 0.0, 0.0, 0.0));
+			gl_Position = MVP * vec4(-10, vertexPosition_modelspace.x, z, 1);
 			break;
 		case 7: //sine
-			gl_Position = MVP * (vec4(0, vertexPosition_modelspace.x, z, 1) + vec4(10.0, 0.0, 0.0, 0.0));
+			gl_Position = vec4( 0.0, vertexPosition_modelspace.x, z, 1);
 			break;
 		default:
 			gl_Position = MVP * vec4(vertexPosition_modelspace, 1);

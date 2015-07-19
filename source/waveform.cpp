@@ -25,6 +25,7 @@ const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.01;
 const float top_speed = 0.02;
+const int column_interval = 8;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -78,8 +79,8 @@ int main(int argc, char **argv) {
 		{GL_GEOMETRY_SHADER, "GeometryShader.geom"},
 		{GL_NONE, NULL}};
 	GLuint programID = LoadShaders(shaders);*/
-	GLuint programID = LoadShaders("shaders/VertexShader.vert", "shaders/FragmentShader.frag", NULL);//"shaders/GeometryShader.geom");
-
+	GLuint programID = LoadShaders("shaders/VertexShader.vert", "shaders/FragmentShader.frag", NULL); //"shaders/GeometryShader.geom");
+	GLuint programID1 = LoadShaders("shaders/VertexShader.vert", "shaders/FragmentShader1.frag", "shaders/GeometryShader.geom"); 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	GLuint objectID = glGetUniformLocation(programID, "object");
 	GLuint topID = glGetUniformLocation(programID, "top");
@@ -361,17 +362,20 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
-		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
+//		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
 
 
-
+glUseProgram(0);
+glUseProgram(programID1);
+glUniformMatrix4fv(glGetUniformLocation(programID1, "MVP"), 1, GL_FALSE, &MVP[0][0]);
+glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
 			GL_FLOAT,				//type
 			GL_FALSE,				//normalized?
-			8,						//stride
+			8 * column_interval,						//stride
 			(void *)0				//array buffer offset
 		);
 
@@ -382,14 +386,15 @@ int main(int argc, char **argv) {
 			1,						//size
 			GL_FLOAT,				//type
 			GL_FALSE,				//normalized?
-			spectrum_interval * 4,	//stride
+			spectrum_interval * 4 * column_interval,	//stride
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 7);
-		glDrawArrays(GL_POINTS, 0, bpf); //draw sine
+		glDrawArrays(GL_POINTS, 0, bpf / column_interval); //draw sine
 
 
 
+		glUseProgram(programID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
