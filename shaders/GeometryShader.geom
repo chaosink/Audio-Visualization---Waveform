@@ -1,7 +1,7 @@
 #version 330
 
 layout(points) in;
-layout(line_strip, max_vertices = 511) out;
+layout(points, max_vertices = 512) out;
 
 uniform mat4 MVP;
 
@@ -29,10 +29,7 @@ for(int i = 0; i < gl_in.length(); i++) {
 		gl_Position = MVP * rotate * (gl_in[i].gl_Position);
 		Color = fragmentColor[i];
 		EmitVertex();
+		EndPrimitive();
 	}
-	gl_Position = MVP * (gl_in[i].gl_Position);
-	Color = fragmentColor[i];
-	EmitVertex();
-	EndPrimitive();
 }
 }
