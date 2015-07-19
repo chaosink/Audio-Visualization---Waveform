@@ -406,13 +406,13 @@ int main(int argc, char **argv) {
 
 		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //sum
-			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
-//			sum_l += abs(((short*)data.data)[data_index++]); //avg
-//			sum_r += abs(((short*)data.data)[data_index++]);
+//			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //sum
+//			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
+			sum_l += abs(((short*)data.data)[data_index++]); //avg
+			sum_r += abs(((short*)data.data)[data_index++]);
 		}
-//		sum_l /= bpf; //avg
-//		sum_r /= bpf;
+		sum_l /= bpf; //avg
+		sum_r /= bpf;
 
 
 
