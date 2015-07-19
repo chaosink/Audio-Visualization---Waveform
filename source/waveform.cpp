@@ -25,7 +25,7 @@ const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.01;
 const float top_speed = 0.02;
-const int column_interval = 8;
+const int column_interval = 16;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -362,7 +362,7 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
-//		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
+		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
 
 
 glUseProgram(0);
