@@ -39,7 +39,7 @@ void main() {
 			break;
 		#endif
 		case 2: //left wave
-			gl_Position = MVP * vec4(-5.0, vertexPosition_modelspace.x / 32768 * wave_height, z, 1);
+			gl_Position = MVP * (vec4(z, vertexPosition_modelspace.x / 32768 * wave_height, 0, 1) + vec4(0.0, 0.0,-10.0, 0.0));
 			break;
 		case 3: //right wave
 			gl_Position = MVP * vec4( 5.0, vertexPosition_modelspace.x / 32768 * wave_height, z, 1);
@@ -51,7 +51,10 @@ void main() {
 			gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
 			break;
 		case 6: //spectrum
-			gl_Position = MVP * vec4(0, vertexPosition_modelspace.x, z, 1);
+			gl_Position = MVP * (vec4(0, vertexPosition_modelspace.x, z, 1) + vec4(-10.0, 0.0, 0.0, 0.0));
+			break;
+		case 7: //sine
+			gl_Position = MVP * (vec4(0, vertexPosition_modelspace.x, z, 1) + vec4(10.0, 0.0, 0.0, 0.0));
 			break;
 		default:
 			gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
@@ -78,6 +81,9 @@ void main() {
 			fragmentColor = vec3(top / 2, top / 2, 1.0);
 			break;
 		case 6: //spectrum log(vertexPosition_modelspace.x + 1) / 3 * 0.8 + 0.2
+			fragmentColor = vec3(abs(z) / 10.0, (z + 10.0)/ 20.0, (log(vertexPosition_modelspace.x + 1) / 3 * 0.8) * (z + 10) / 5 + 0.2);
+			break;
+		case 7: //sine
 			fragmentColor = vec3(abs(z) / 10.0, (z + 10.0)/ 20.0, (log(vertexPosition_modelspace.x + 1) / 3 * 0.8) * (z + 10) / 5 + 0.2);
 			break;
 		default:

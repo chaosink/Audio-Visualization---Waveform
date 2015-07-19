@@ -356,11 +356,37 @@ int main(int argc, char **argv) {
 			1,						//size
 			GL_FLOAT,				//type
 			GL_FALSE,				//normalized?
-			spectrum_interval * 2,	//stride
+			spectrum_interval * 4 / 2,
+									//stride
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
 		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
+
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
+		glVertexAttribPointer(
+			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
+			1,						//size
+			GL_FLOAT,				//type
+			GL_FALSE,				//normalized?
+			8,						//stride
+			(void *)0				//array buffer offset
+		);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //sine
+		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
+		glVertexAttribPointer(
+			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
+			1,						//size
+			GL_FLOAT,				//type
+			GL_FALSE,				//normalized?
+			spectrum_interval * 4,	//stride
+			(void *)0				//array buffer offset
+		);
+		glUniform1i(objectID, 7);
+		glDrawArrays(GL_POINTS, 0, bpf); //draw sine
 
 
 
@@ -389,7 +415,7 @@ int main(int argc, char **argv) {
 		glUniform1i(objectID, 2);
 		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw left waveform
 
-		glVertexAttribPointer(
+/*		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
 			GL_SHORT,				//type
@@ -398,11 +424,11 @@ int main(int argc, char **argv) {
 			(void *)2				//array buffer offset
 		);
 		glUniform1i(objectID, 3);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw right waveform
+		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw right waveform*/
 
 
-
-		float sum_l = 0, sum_r = 0;
+		data_index += bpf * 2;
+/*		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
 			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //max
 			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
@@ -552,7 +578,7 @@ int main(int argc, char **argv) {
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
 		glUniform1f(topID, scale_r);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top*/
 
 
 
