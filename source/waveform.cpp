@@ -23,7 +23,7 @@ const int fps = 40;
 const int column_height = 2;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
-const float top_height = 0.001;
+const float top_height = 0.01;
 const float top_speed = 0.02;
 
 void *play_wav_d(void *file) {
@@ -334,12 +334,10 @@ int main(int argc, char **argv) {
 			for(int j = 1; j < spectrum_interval; j++)
 				FFTdata[i * spectrum_interval] += FFTdata[i * spectrum_interval + j];
 			FFTdata[i * spectrum_interval] /= spectrum_interval * 10;
-//			FFTdata[i * spectrum_interval] = log(FFTdata[i * spectrum_interval] + 1);
 			FFTdata[i * spectrum_interval + spectrum_interval / 2] = 0;
 		}
-/*		float ma = 0;//spectrum_interval * bpf
-		for(int i = 0; i < bpf; i++) ma = max(ma, FFTdata[i * spectrum_interval]);
-		std::cout << ma << std::endl;*/
+
+
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
@@ -406,10 +404,10 @@ int main(int argc, char **argv) {
 
 		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-//			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //max
-//			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
-			sum_l += abs(((short*)data.data)[data_index++]); //avg
-			sum_r += abs(((short*)data.data)[data_index++]);
+			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //max
+			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
+//			sum_l += abs(((short*)data.data)[data_index++]); //avg
+//			sum_r += abs(((short*)data.data)[data_index++]);
 		}
 		sum_l /= bpf; //avg
 		sum_r /= bpf;
@@ -451,7 +449,7 @@ int main(int argc, char **argv) {
 		glUniform1i(objectID, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left column
 		
-		if(scale_l + top_height > max_l) max_l = scale_l + top_height;
+		if(scale_l> max_l) max_l = scale_l;
 		else max_l -= top_speed;
 		glm::mat4 translate1 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
@@ -522,7 +520,7 @@ int main(int argc, char **argv) {
 		glUniform1i(objectID, 1);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right column
 
-		if(scale_r + top_height > max_r) max_r = scale_r + top_height;
+		if(scale_r > max_r) max_r = scale_r;
 		else max_r -= top_speed;
 		glm::mat4 translate2 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
