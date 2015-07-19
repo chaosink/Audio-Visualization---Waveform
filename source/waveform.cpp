@@ -313,6 +313,7 @@ int main(int argc, char **argv) {
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
+		glUniform1f(glGetUniformLocation(programID, "waveform_length"), waveform_length);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -349,7 +350,7 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //spectrum
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //left spectrum
 		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -361,10 +362,39 @@ int main(int argc, char **argv) {
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 6);
-		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
+		glDrawArrays(GL_LINES, 0, bpf * 2); //draw left spectrum
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
+		glVertexAttribPointer(
+			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
+			1,						//size
+			GL_FLOAT,				//type
+			GL_FALSE,				//normalized?
+			0,						//stride
+			(void *)0				//array buffer offset
+		);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //right spectrum
+		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
+		glVertexAttribPointer(
+			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
+			1,						//size
+			GL_FLOAT,				//type
+			GL_FALSE,				//normalized?
+			spectrum_interval * 4 / 2,
+									//stride
+			(void *)0				//array buffer offset
+		);
+		glUniform1i(objectID, 7);
+		glDrawArrays(GL_LINES, 0, bpf * 2); //draw right spectrum
 
 
 
+for(int i = 0; i < bpf; i += bpf / 30) {//if(i == 10 * bpf / 100) {
+	int frequency_interval = data.sampling_rate / 2 / bpf;
+	int frequency = i * frequency_interval;
+	float sine_vertex[bpf];
+	for(int j = 0; j < bpf; j++) sine_vertex[j] = FFTdata[i * spectrum_interval] * sin(frequency * (z[j * 2] + waveform_length / 2) / fps / waveform_length);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
 			2,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -376,17 +406,20 @@ int main(int argc, char **argv) {
 		);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer5); //sine
-		glBufferData(GL_ARRAY_BUFFER, spectrum_interval * bpf * 4, FFTdata, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, bpf * 4, sine_vertex, GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
 			1,						//size
 			GL_FLOAT,				//type
 			GL_FALSE,				//normalized?
-			spectrum_interval * 4,	//stride
+			0,
+									//stride
 			(void *)0				//array buffer offset
 		);
-		glUniform1i(objectID, 7);
-		glDrawArrays(GL_POINTS, 0, bpf); //draw sine
+		glUniform1i(objectID, 8);
+		glUniform1f(glGetUniformLocation(programID, "sine_z"), z[i * 2]);
+		glDrawArrays(GL_LINE_STRIP, 0, bpf); //draw spectrum
+}
 
 
 
