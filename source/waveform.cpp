@@ -23,7 +23,7 @@ const int fps = 40;
 const int column_height = 2;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
-const float top_height = 0.001;
+const float top_height = 0.01;
 const float top_speed = 0.02;
 
 void *play_wav_d(void *file) {
@@ -451,7 +451,7 @@ int main(int argc, char **argv) {
 		glUniform1i(objectID, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw left column
 		
-		if(scale_l + top_height > max_l) max_l = scale_l + top_height;
+		if(scale_l> max_l) max_l = scale_l;
 		else max_l -= top_speed;
 		glm::mat4 translate1 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,
@@ -522,7 +522,7 @@ int main(int argc, char **argv) {
 		glUniform1i(objectID, 1);
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right column
 
-		if(scale_r + top_height > max_r) max_r = scale_r + top_height;
+		if(scale_r > max_r) max_r = scale_r;
 		else max_r -= top_speed;
 		glm::mat4 translate2 = glm::mat4(
 			 1.0, 0.0, 0.0, 0.0,

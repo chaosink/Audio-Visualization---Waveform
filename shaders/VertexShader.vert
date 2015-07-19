@@ -10,7 +10,7 @@ uniform mat4 MVP;
 uniform int object;
 uniform float top;
 
-int color_factor = 8;
+int color_factor = 4;
 float size_factor = 0.01;
 float size_factor1 = 0.1;
 int wave_height = 5;
