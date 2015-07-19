@@ -334,12 +334,10 @@ int main(int argc, char **argv) {
 			for(int j = 1; j < spectrum_interval; j++)
 				FFTdata[i * spectrum_interval] += FFTdata[i * spectrum_interval + j];
 			FFTdata[i * spectrum_interval] /= spectrum_interval * 10;
-//			FFTdata[i * spectrum_interval] = log(FFTdata[i * spectrum_interval] + 1);
 			FFTdata[i * spectrum_interval + spectrum_interval / 2] = 0;
 		}
-/*		float ma = 0;//spectrum_interval * bpf
-		for(int i = 0; i < bpf; i++) ma = max(ma, FFTdata[i * spectrum_interval]);
-		std::cout << ma << std::endl;*/
+
+
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4); //z
 		glVertexAttribPointer(
