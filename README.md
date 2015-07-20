@@ -30,3 +30,10 @@ Spectrum, waveform, sine
 ![2-2.png](./screenshots/2-2.png)
 
 ![2-3.png](./screenshots/2-3.png)
+
+Spectrum
+![3-1.png](./screenshots/3-1.png)
+
+![3-2.png](./screenshots/3-2.png)
+
+![3-3.png](./screenshots/3-3.png)
