@@ -365,6 +365,7 @@ int main(int argc, char **argv) {
 		glDrawArrays(GL_LINES, 0, bpf * 2); //draw spectrum
 
 
+
 glUniform1i(objectID, 7);
 for(int i = 0; i < bpf; i += bpf / 30) { //if(FFTdata[i * spectrum_interval] > 1) { //if(i == 10 * bpf / 100) {
 	int frequency_interval = data.sampling_rate / 2 / bpf;
