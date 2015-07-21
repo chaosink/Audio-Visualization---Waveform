@@ -437,8 +437,8 @@ for(int i = 0; i < bpf; i += bpf / 15) { //if(FFTdata[i * spectrum_interval] > 1
 		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw right waveform*/
 
 
-//		data_index += bpf * 2;
-		float sum_l = 0, sum_r = 0;
+		data_index += bpf * 2;
+/*		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
 			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //max
 			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
@@ -588,7 +588,7 @@ for(int i = 0; i < bpf; i += bpf / 15) { //if(FFTdata[i * spectrum_interval] > 1
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
 		glUniform1f(topID, scale_r);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top*/
 
 
 
