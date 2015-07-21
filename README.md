@@ -1,5 +1,8 @@
 # Audio-Visualization---Waveform
+
 An audio visualizer.
+
+Repository: [Audio-Visualization---Waveform](https://github.com/chaosink/Audio-Visualization---Waveform)
 
 `WAV(16 bits, 2 channels)` files supported only for now.
 
@@ -12,9 +15,13 @@ make
 ```
 
 # Dependencies
+[OpenGL - The Industry's Foundation for High Performance Graphics](https://www.opengl.org/)
+
 [GLFW - An OpenGL library](http://www.glfw.org/)
 
 [GLEW - The OpenGL Extension Wrangler Library](http://glew.sourceforge.net/)
+
+[GLM - OpenGL Mathematics](http://glm.g-truc.net/0.9.6/index.html)
 
 [ALSA - Advanced Linux Sound Architecture](http://www.alsa-project.org/main/index.php/Main_Page)
 
@@ -29,11 +36,12 @@ Spectrum, waveform, sine
 
 ![2-2.png](./screenshots/2-2.png)
 
-![2-3.png](./screenshots/2-3.png)
-
-Spectrum
+Spectrum-circle
 ![3-1.png](./screenshots/3-1.png)
 
 ![3-2.png](./screenshots/3-2.png)
 
-![3-3.png](./screenshots/3-3.png)
+Spectrum-column
+![4-1.png](./screenshots/4-1.png)
+
+![4-2.png](./screenshots/4-2.png)
