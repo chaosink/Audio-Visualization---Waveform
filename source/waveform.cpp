@@ -44,7 +44,8 @@ int main(int argc, char **argv) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(1920, 1080, "Audio Visualization", glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(960, 540, "Audio Visualization", NULL, NULL);
+	glfwSetWindowPos(window, 0, 0);
 	if(window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
@@ -367,7 +368,7 @@ int main(int argc, char **argv) {
 
 
 glUniform1i(objectID, 7);
-for(int i = 0; i < bpf; i += bpf / 30) { //if(FFTdata[i * spectrum_interval] > 1) { //if(i == 10 * bpf / 100) {
+for(int i = 0; i < bpf; i += bpf / 15) { //if(FFTdata[i * spectrum_interval] > 1) { //if(i == 10 * bpf / 100) {
 	int frequency_interval = data.sampling_rate / 2 / bpf;
 	int frequency = i * frequency_interval;
 	float sine_vertex[bpf];
@@ -436,8 +437,8 @@ for(int i = 0; i < bpf; i += bpf / 30) { //if(FFTdata[i * spectrum_interval] > 1
 		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw right waveform*/
 
 
-		data_index += bpf * 2;
-/*		float sum_l = 0, sum_r = 0;
+//		data_index += bpf * 2;
+		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
 			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //max
 			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
@@ -587,7 +588,7 @@ for(int i = 0; i < bpf; i += bpf / 30) { //if(FFTdata[i * spectrum_interval] > 1
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 		glUniform1i(objectID, 5);
 		glUniform1f(topID, scale_r);
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top*/
+		glDrawArrays(GL_TRIANGLES, 0, 12*3); //draw right lower top
 
 
 
