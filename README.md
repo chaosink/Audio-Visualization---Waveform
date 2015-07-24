@@ -8,7 +8,9 @@ Repository: [Audio-Visualization---Waveform](https://github.com/chaosink/Audio-V
 
 Visualized by `GLSL`.
 
-Video on Youtube: [Spectrum, waveform, level](https://youtu.be/jQj0ZregYc8)
+Video on Youtube: [Spectrum, waveform, level](https://youtu.be/7LfaSCFfXek)
+
+Video on Youku: [Spectrum, waveform, level](http://v.youku.com/v_show/id_XMTI5MjcxMDQwMA==.html)
 
 # Compiling
 ```shell
