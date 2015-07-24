@@ -11,14 +11,14 @@ Visualized by `GLSL`.
 Video on Youtube:
 * [Audio-Visualization---Waveform, Spectrum, Level](https://youtu.be/7LfaSCFfXek)
 * [Audio-Visualization---Waveform, Spectrum, Sine](http://youtu.be/M1vgzOlViHw)
-* [Audio-Visualization---Dot-Circle-Spectrum](http://youtu.be/M1vgzOlViHw)
-* [Audio-Visualization---Waveform, Spectrum, Level](https://youtu.be/zAzh2CJGibc)
+* [Audio-Viusalization---Columned-Spectrum](https://youtu.be/Oxa4EXfW8GY)
+* [Audio-Visualization---Dot-Circle-Spectrum](https://youtu.be/zAzh2CJGibc)
 
 Video on Youku:
 * [Audio-Visualization---Waveform, Spectrum, Level](http://v.youku.com/v_show/id_XMTI5MjcxMDQwMA==.html)
 * [Audio-Visualization---Waveform, Spectrum, Sine](http://v.youku.com/v_show/id_XMTI5Mjc5MDg2NA==.html)
-* [Audio-Visualization---Dot-Circle-Spectrum](http://v.youku.com/v_show/id_XMTI5Mjc5MDg2NA==.html)
-* [Audio-Visualization---Waveform, Spectrum, Level](http://v.youku.com/v_show/id_XMTI5Mjg2Mjc2MA==.html)
+* [Audio-Viusalization---Columned-Spectrumm](http://v.youku.com/v_show/id_XMTI5Mjg0MDkxNg==.html)
+* [Audio-Visualization---Dot-Circle-Spectrum](http://v.youku.com/v_show/id_XMTI5Mjg2Mjc2MA==.html)
 
 # Compiling
 ```shell
