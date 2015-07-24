@@ -23,6 +23,10 @@ Video on Youku:
 # Compiling
 ```shell
 make
+```
+
+# Usage
+```shell
 ./waveform your_wav.wav
 ```
 
