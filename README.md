@@ -11,10 +11,14 @@ Visualized by `GLSL`.
 Video on Youtube:
 * [Audio-Visualization---Waveform, Spectrum, Level](https://youtu.be/7LfaSCFfXek)
 * [Audio-Visualization---Waveform, Spectrum, Sine](http://youtu.be/M1vgzOlViHw)
+* [Audio-Visualization---Dot-Circle-Spectrum](http://youtu.be/M1vgzOlViHw)
+* [Audio-Visualization---Waveform, Spectrum, Level](https://youtu.be/zAzh2CJGibc)
 
 Video on Youku:
 * [Audio-Visualization---Waveform, Spectrum, Level](http://v.youku.com/v_show/id_XMTI5MjcxMDQwMA==.html)
 * [Audio-Visualization---Waveform, Spectrum, Sine](http://v.youku.com/v_show/id_XMTI5Mjc5MDg2NA==.html)
+* [Audio-Visualization---Dot-Circle-Spectrum](http://v.youku.com/v_show/id_XMTI5Mjc5MDg2NA==.html)
+* [Audio-Visualization---Waveform, Spectrum, Level](http://v.youku.com/v_show/id_XMTI5Mjg2Mjc2MA==.html)
 
 # Compiling
 ```shell
