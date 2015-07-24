@@ -8,6 +8,8 @@ Repository: [Audio-Visualization---Waveform](https://github.com/chaosink/Audio-V
 
 Visualized by `GLSL`.
 
+Video on Youtube: [Spectrum, waveform, level](https://youtu.be/jQj0ZregYc8)
+
 # Compiling
 ```shell
 make
