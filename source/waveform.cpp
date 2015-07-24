@@ -19,13 +19,15 @@ GLFWwindow* window;
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-const int fps = 40;
+const int fps = 24;
 const int column_height = 2;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.01;
 const float top_speed = 0.02;
 const int column_interval = 4;
+const int window_width = 1920;
+const int window_height = 1080;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -45,7 +47,7 @@ int main(int argc, char **argv) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(1920, 1080, "Audio Visualization", glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(window_width, window_height, "Audio Visualization", glfwGetPrimaryMonitor(), NULL);
 	if(window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
