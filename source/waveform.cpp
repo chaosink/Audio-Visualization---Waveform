@@ -19,13 +19,15 @@ GLFWwindow* window;
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-const int fps = 40;
+const int fps = 32;
 const int column_height = 2;
 const int waveform_interval = 1;
 const float waveform_length = 20.0;
 const float top_height = 0.01;
 const float top_speed = 0.02;
-const int column_interval = 8;
+const int column_interval = 12;
+const int window_width = 1920;
+const int window_height = 1080;
 
 void *play_wav_d(void *file) {
 	play_wav((char *)file);
@@ -45,7 +47,7 @@ int main(int argc, char **argv) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(1920, 1080, "Audio Visualization", glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(window_width, window_height, "Audio Visualization", glfwGetPrimaryMonitor(), NULL);
 	if(window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
@@ -296,14 +298,18 @@ int main(int argc, char **argv) {
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer4);
 	glBufferData(GL_ARRAY_BUFFER, bpf * 8, z, GL_STATIC_DRAW);
 
-	int res;
+	FILE *out = fopen("/media/lin/Ubuntu/home/lin/raw_video", "wb");
+	GLbyte *frame[2000];
+	int frame_count = 0;
+
+/*	int res;
 	pthread_t a_thread;
 	void *thread_result;
 	res = pthread_create(&a_thread, NULL, play_wav_d, argv[1]);
 	if(res != 0) {
 		perror("Thread creation failed!");
 		exit(EXIT_FAILURE);
-	}
+	}*/
 
 	FFT fft;
 	fft.setDataSize(bpf);
@@ -418,7 +424,7 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 			(void *)0				//array buffer offset
 		);
 		glUniform1i(objectID, 2);
-		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw left waveform
+//		glDrawArrays(GL_LINE_STRIP, 0, bpf / waveform_interval); //draw left waveform
 
 /*		glVertexAttribPointer(
 			0,						//attribute. No particular reason for 0, but must match the layout in the shader.
@@ -435,8 +441,10 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 		data_index += bpf * 2;
 /*		float sum_l = 0, sum_r = 0;
 		for(int i = 0; i < bpf; i++) {
-			sum_l = max(sum_l, abs(((short*)data.data)[data_index++])); //max
-			sum_r = max(sum_r, abs(((short*)data.data)[data_index++]));
+			sum_l = max(sum_l, abs(((short*)data.data)[data_index])); //max
+			data_index++;
+			sum_r = max(sum_r, abs(((short*)data.data)[data_index]));
+			data_index++;
 //			sum_l += abs(((short*)data.data)[data_index++]); //avg
 //			sum_r += abs(((short*)data.data)[data_index++]);
 		}
@@ -591,10 +599,13 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 
+		frame[frame_count] = new GLbyte[window_width * window_height * 3];
+		glReadPixels(0, 0, window_width, window_height, GL_RGB, GL_UNSIGNED_BYTE, frame[frame_count++]);
+
 		if(data_index >= data.size / 2) break;
 		current_time = glfwGetTime();
 		double left_time = total_time - current_time;
-		if(left_time <= 0) break;
+//		if(left_time <= 0) break;
 		double accurate_time = data_index / 2.0 / bpf / fps;
 		double delta = accurate_time - current_time;
 		printf("%lf %lf %lf %lf %lf\n", current_time - last_time, accurate_time, current_time, delta, left_time);
@@ -605,12 +616,12 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 		glfwPollEvents();
 	} while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window));
 
-	pthread_cancel(a_thread);
+/*	pthread_cancel(a_thread);
 	res = pthread_join(a_thread, &thread_result);
 	if(res != 0) {
 		perror("Thread join failed!");
 		exit(EXIT_FAILURE);
-	}
+	}*/
 
 	glDeleteBuffers(1, &vertexbuffer1);
 	glDeleteBuffers(1, &vertexbuffer2);
@@ -623,6 +634,9 @@ glUniform1i(glGetUniformLocation(programID1, "object"), 7);
 	glDeleteVertexArrays(1, &VertexArrayID);
 
 	glfwTerminate();
+
+	for(int i = 0; i < frame_count; i++) fwrite(frame[i], window_width * window_height * 3, 1, out);
+	printf("%d %d %d\n", data.size, data.sampling_rate, frame_count);
 
 	return 0;
 }
