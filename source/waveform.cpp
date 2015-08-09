@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 //	glClearColor(0.f / 255.f, 63.f / 255.f, 0.f / 255.f, 1.0f);
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS); 
+	glDepthFunc(GL_LESS);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
