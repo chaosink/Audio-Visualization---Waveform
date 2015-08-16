@@ -20,17 +20,17 @@ Video on Youku:
 * [Audio-Viusalization---Columned-Spectrumm](http://v.youku.com/v_show/id_XMTI5Mjg0MDkxNg==.html)
 * [Audio-Visualization---Dot-Circle-Spectrum](http://v.youku.com/v_show/id_XMTI5Mjg2Mjc2MA==.html)
 
-# Compiling
+## Compiling
 ```shell
 make
 ```
 
-# Usage
+## Usage
 ```shell
 ./waveform your_wav.wav
 ```
 
-# Dependencies
+## Dependencies
 [OpenGL - The Industry's Foundation for High Performance Graphics](https://www.opengl.org/)
 
 [GLFW - An OpenGL library](http://www.glfw.org/)
@@ -41,7 +41,7 @@ make
 
 [ALSA - Advanced Linux Sound Architecture](http://www.alsa-project.org/main/index.php/Main_Page)
 
-# Screenshots
+## Screenshots
 Spectrum, waveform, level
 ![1-1.png](./screenshots/1-1.png)
 
